@@ -1,0 +1,44 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: nginx-example
+  annotations:
+    run.googleapis.com/launch-stage: BETA
+spec:
+  template:
+    metadata:
+      annotations:
+      # dependencies for container ordering
+        run.googleapis.com/container-dependencies: "{hello: [nginx]}"
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+        - name: http1
+          containerPort: 8080
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        volumeMounts:
+        - name: nginx-conf-secret
+          readOnly: true
+          mountPath: /etc/nginx/conf.d/
+      - image: us-docker.pkg.dev/cloudrun/container/hello
+        name: hello
+        env:
+        - name: PORT
+          value: '8888'
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+      volumes:
+      # mounting the secret 
+      - name: nginx-conf-secret
+        secret:
+          secretName: nginx-config
+          items:
+          - key: latest
+            path: default.conf
