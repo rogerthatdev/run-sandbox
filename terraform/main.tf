@@ -46,7 +46,7 @@ resource "google_secret_manager_secret_version" "nginx_config" {
 resource "google_artifact_registry_repository" "sidecar" {
   project       = var.project_id
   location      = "us-central1"
-  repository_id = "side-car-repo"
+  repository_id = "app"
   format        = "DOCKER"
 }
 
