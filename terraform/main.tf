@@ -25,7 +25,7 @@ resource "time_sleep" "wait_30_seconds" {
 
 
 resource "google_secret_manager_secret" "nginx_config" {
-  secret_id = "nginx-config"
+  secret_id = "nginx_config"
   project   = var.project_id
   replication {
     automatic = true
