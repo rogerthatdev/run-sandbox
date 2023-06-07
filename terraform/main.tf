@@ -59,5 +59,5 @@ resource "google_secret_manager_secret_iam_member" "member" {
 }
 
 output "ar_repo" {
-  value = google_artifact_registry_repository.sidecar.id
+  value = "${google_artifact_registry_repository.sidecar.location}-docker.pkg.dev/${google_artifact_registry_repository.sidecar.project}/${google_artifact_registry_repository.sidecar.name}"
 }
