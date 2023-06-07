@@ -43,13 +43,12 @@ resource "google_secret_manager_secret_version" "nginx_config" {
   secret_data = data.local_file.nginx_conifg.content
   depends_on  = [time_sleep.wait_30_seconds]
 }
-
-
-# Secret manager secret accessor for service account
-# data "google_compute_default_service_account" "default" {
-#   project = var.project_id
-# }
-
+resource "google_artifact_registry_repository" "sidecar" {
+  project       = var.project_id
+  location      = "us-central1"
+  repository_id = "side-car-repo"
+  format        = "DOCKER"
+}
 
 resource "google_secret_manager_secret_iam_member" "member" {
   project    = var.project_id
@@ -59,3 +58,6 @@ resource "google_secret_manager_secret_iam_member" "member" {
   depends_on = [time_sleep.wait_30_seconds]
 }
 
+output "ar_repo" {
+  value = google_artifact_registry_repository.sidecar.id
+}
