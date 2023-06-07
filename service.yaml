@@ -8,8 +8,8 @@ spec:
   template:
     metadata:
       annotations:
-      # dependencies for container ordering
-        run.googleapis.com/container-dependencies: "{hello: [nginx]}"
+        # dependencies for container ordering
+        run.googleapis.com/container-dependencies: "{sidecar: [nginx]}"
     spec:
       containers:
       - image: nginx
@@ -25,8 +25,8 @@ spec:
         - name: nginx-conf-secret
           readOnly: true
           mountPath: /etc/nginx/conf.d/
-      - image: us-docker.pkg.dev/cloudrun/container/hello
-        name: hello
+      - image: us-central1-docker.pkg.dev/<PROJECT_ID>/app/sidecar
+        name: sidecar
         env:
         - name: PORT
           value: '8888'
@@ -38,7 +38,7 @@ spec:
       # mounting the secret 
       - name: nginx-conf-secret
         secret:
-          secretName: nginx-config
+          secretName: nginx_config
           items:
           - key: latest
             path: default.conf
